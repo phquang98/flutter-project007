@@ -1,5 +1,5 @@
+import 'package:example_repo_layer/data/provider/index.dart';
 import 'package:example_repo_layer/product_model/models/index.dart';
-import 'package:example_repo_layer/data/provider/product_model.provider.dart';
 
 /// Wrapper of client API, used by business logic layer
 class ProductModelRepository {

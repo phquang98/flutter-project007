@@ -1,9 +1,8 @@
 import 'dart:developer';
-import 'package:example_repo_layer/product_model/models/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:example_repo_layer/product_model/bloc/index.dart';
+import 'package:example_repo_layer/product_model/cubit/product_model.cubit.dart';
 
 class ResourceScreen extends StatefulWidget {
   const ResourceScreen({super.key});
@@ -92,16 +91,6 @@ class _ResourceScreenState extends State<ResourceScreen> {
                                   .updateByChange({"name": tmpOne}, []);
 
                               log("em yeu oi: ${state.currentRecord["name"]}");
-
-                              // context
-                              //     .read<ProductModelCubit>()
-                              //     .updateByChange((
-                              //   1,
-                              //   "defaultName",
-                              //   "defaultDescription",
-                              //   "b9b2057f-94df-4dcb-9646-0eff72f554e7",
-                              //   "2024-04-01"
-                              // ), []);
 
                               // formKeyCurrentState
                               //     .save(); // call onSave on all possible TextFieldForm

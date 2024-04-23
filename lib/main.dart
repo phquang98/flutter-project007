@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:example_repo_layer/product_model/bloc/index.dart';
 import 'package:example_repo_layer/product_model/views/resource_screen.dart';
+import 'package:example_repo_layer/product_model/cubit/product_model.cubit.dart';
 
 void main() {
   runApp(const MainApp());

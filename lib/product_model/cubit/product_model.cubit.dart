@@ -1,10 +1,11 @@
 import 'dart:developer';
-
 import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
 
+import 'package:example_repo_layer/data/repositories/index.dart';
 import 'package:example_repo_layer/product_model/models/index.dart';
-import 'package:example_repo_layer/product_model/bloc/product_model.state.dart';
-import 'package:example_repo_layer/data/repositories/product_model.repository.dart';
+
+part 'product_model.state.dart';
 
 class ProductModelCubit extends Cubit<ProductModelState> {
   ProductModelCubit({

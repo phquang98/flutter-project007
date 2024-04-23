@@ -1,6 +1,4 @@
-import 'package:equatable/equatable.dart';
-
-import 'package:example_repo_layer/product_model/models/index.dart';
+part of 'product_model.cubit.dart';
 
 // TODO: need to rethink this, not reflex irl
 // loading could be understood like updating the state from UI, fetching, ...
