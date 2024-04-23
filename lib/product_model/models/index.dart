@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 // TODO: might need to create 2 model: 1 rawModel for directly from API, 1 for used in business layer, and use this index file as a barrel
 
 class ProductModel extends Equatable {
-  final int productModelID;
+  final int? productModelID;
   final String name;
   final String? catalogDescription;
   final String rowguid;
@@ -28,6 +28,7 @@ class ProductModel extends Equatable {
     }
   }
 
+  // TODO: remove all except ID cause redundant ?
   @override
   List<Object?> get props =>
       [productModelID, name, catalogDescription, rowguid, modifiedDate];

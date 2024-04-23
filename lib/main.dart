@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'package:example_repo_layer/product_model/bloc/index.dart';
+import 'package:example_repo_layer/product_model/views/resource_screen.dart';
 
 void main() {
   runApp(const MainApp());
@@ -9,10 +13,15 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
+        body: MultiBlocProvider(
+          providers: <BlocProvider<dynamic>>[
+            BlocProvider<ProductModelCubit>(
+              create: (BuildContext context) => ProductModelCubit(),
+            ),
+          ],
+          child: const ResourceScreen(),
         ),
       ),
     );
