@@ -38,6 +38,13 @@ class _ResourceScreenState extends State<ResourceScreen> {
           log("filling...");
           log("here from listener: ${state.currentRecord}");
         }
+        if (state.resourceStatus == ResourceStatus.failure) {
+          log("failed...");
+          final snackBar = SnackBar(
+            content: Text(state.productModelList[0].name),
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        }
       },
       // this builder should be as pure as possible
       builder: (context, state) {
@@ -104,8 +111,11 @@ class _ResourceScreenState extends State<ResourceScreen> {
                       // TODO: only switch expression exist, no if expression
                       // Loi logic: code nay thuc thi truoc -> khong co data -> error
                       // Text('Data o day: ${state.productModelList[0].name}'),
-                      switch (state.productModelList.length) {
-                        == 1 =>
+                      switch ((
+                        state.resourceStatus,
+                        state.productModelList.length
+                      )) {
+                        (ResourceStatus.success, == 1) =>
                           Text('Data o day: ${state.productModelList[0].name}'),
                         _ => const Text('Chua co data, hoi cai loz me may ???'),
                       }

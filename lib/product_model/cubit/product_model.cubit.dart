@@ -19,8 +19,21 @@ class ProductModelCubit extends Cubit<ProductModelState> {
   Future<void> fetchOne({required int recordId}) async {
     emit(state.copyWith(resourceStatusHere: ResourceStatus.inProgress));
 
-    // already trycatch in provider/client API layer
     final queryRes = await _productModelRepository.readOne(recordId);
+    log("dmm: $queryRes");
+
+    // Error handling
+    if (queryRes case ProductModel tmp
+        when tmp.productModelID == 0 ||
+            tmp.productModelID == -1 ||
+            tmp.productModelID == -2) {
+      log("chay loc loi");
+      emit(state.copyWith(
+        resourceStatusHere: ResourceStatus.failure,
+        productModelListHere: [queryRes],
+      ));
+      return;
+    }
 
     // create a copy of the existing list and add the new element
     List<ProductModel> cacList = List.from(state.productModelList)
@@ -30,6 +43,7 @@ class ProductModelCubit extends Cubit<ProductModelState> {
       resourceStatusHere: ResourceStatus.success,
       productModelListHere: cacList,
     ));
+    return;
   }
 
   /// Reflect changes affected by live editing on the UI (e.g. fill in input forms, ...)
