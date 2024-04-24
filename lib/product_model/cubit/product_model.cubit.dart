@@ -12,18 +12,19 @@ class ProductModelCubit extends Cubit<ProductModelState> {
     ProductModelRepository? productModelRepository,
   })  : _productModelRepository =
             productModelRepository ?? ProductModelRepository(),
-        super(const ProductModelState({}));
+        super(ProductModelState.init());
 
   final ProductModelRepository _productModelRepository;
 
   Future<void> fetchOne({required int recordId}) async {
-    emit(state.copyWith(resourceStatusHere: ResourceStatus.loading));
+    emit(state.copyWith(resourceStatusHere: ResourceStatus.inProgress));
 
-    // TODO: trycatch here, or inside repo filee
-    final cac = await _productModelRepository.readOne(recordId);
+    // already trycatch in provider/client API layer
+    final queryRes = await _productModelRepository.readOne(recordId);
 
-    // Create a copy of the existing list and add the new element
-    List<ProductModel> cacList = List.from(state.productModelList)..add(cac);
+    // create a copy of the existing list and add the new element
+    List<ProductModel> cacList = List.from(state.productModelList)
+      ..add(queryRes);
 
     emit(state.copyWith(
       resourceStatusHere: ResourceStatus.success,
@@ -36,12 +37,13 @@ class ProductModelCubit extends Cubit<ProductModelState> {
     Map<String, dynamic> record,
     List<ProductModel>? productModelList,
   ) {
-    log("clgt: ${record}");
     emit(state.copyWith(
       currentRecordHere: record,
-      resourceStatusHere: ResourceStatus.loading,
+      resourceStatusHere: ResourceStatus.inProgress,
       productModelListHere: productModelList,
     ));
+    // log("why: $record");
+    // log("why: ${state.currentRecord}");
   }
 
   void reset() {

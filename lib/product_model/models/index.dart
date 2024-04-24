@@ -9,9 +9,13 @@ class ProductModel extends Equatable {
   final String rowguid;
   final String modifiedDate;
 
+  // generative constructor
   const ProductModel(
-      this.productModelID, this.name, this.rowguid, this.modifiedDate)
-      : catalogDescription = null;
+    this.productModelID,
+    this.name,
+    this.rowguid,
+    this.modifiedDate,
+  ) : catalogDescription = null;
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
     if (json

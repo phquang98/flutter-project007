@@ -32,13 +32,11 @@ class _ResourceScreenState extends State<ResourceScreen> {
     double screenWidth = MediaQuery.of(context).size.width;
 
     return BlocConsumer<ProductModelCubit, ProductModelState>(
+      // not called at the initial state https://bloclibrary.dev/flutter-bloc-concepts/#bloclistener
       listener: (context, state) {
-        if (state.resourceStatus == ResourceStatus.initial) {
-          log("watching...");
-          context.read<ProductModelCubit>().fetchOne(recordId: 10);
-        }
-        if (state.resourceStatus == ResourceStatus.loading) {
-          log("Filling data...");
+        if (state.resourceStatus == ResourceStatus.inProgress) {
+          log("filling...");
+          log("here from listener: ${state.currentRecord}");
         }
       },
       // this builder should be as pure as possible
@@ -82,15 +80,18 @@ class _ResourceScreenState extends State<ResourceScreen> {
                       ElevatedButton(
                         onPressed: () {
                           if (_formKey.currentState
-                              case FormState formKeyCurrentState) {
+                              case FormState formKeyCurrentState?) {
                             if (formKeyCurrentState.validate()) {
                               final tmpOne = nameController.text;
 
-                              context
-                                  .read<ProductModelCubit>()
-                                  .updateByChange({"name": tmpOne}, []);
-
-                              log("em yeu oi: ${state.currentRecord["name"]}");
+                              context.read<ProductModelCubit>().updateByChange({
+                                "productModelID": 69,
+                                "name": tmpOne,
+                                "catalogDescription": null,
+                                "rowguid":
+                                    "9155e5b2-f52d-4e33-b660-d85a208c0c4b",
+                                "modifiedDate": "2024-01-01",
+                              }, []);
 
                               // formKeyCurrentState
                               //     .save(); // call onSave on all possible TextFieldForm
