@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:example_repo_layer/product_model/models/index.dart';
@@ -12,6 +13,55 @@ import 'package:example_repo_layer/product_model/models/index.dart';
 ///
 /// The number of methods should equals to the number of public endpoints provided for the resource
 class ProductModelProvider {
+  Future<List<ProductModel>> getAll(String url) async {
+    try {
+      final response = await http.get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        List<dynamic> tmpList = jsonDecode(response.body);
+        List<ProductModel> resourceClt = [];
+
+        for (dynamic element in tmpList) {
+          if (element
+              case {
+                "productModelID": int _,
+                "name": String _,
+                "catalogDescription": String? _,
+                "rowguid": String _,
+                "modifiedDate": String _,
+              } when element is Map<String, dynamic>) {
+            ProductModel tmpRecord = ProductModel.fromJson(element);
+            // NOTE: don't know how to cast List<dynamic> -> List<CustomType>, temp solution
+            resourceClt = [...resourceClt, tmpRecord];
+          }
+        }
+        return resourceClt;
+
+        // // NOTE: this does not work for some reason ?
+        // tmpList.map((element) {
+        //   if (element
+        //       case {
+        //         "productModelID": int _,
+        //         "name": String _,
+        //         "catalogDescription": String? _,
+        //         "rowguid": String _,
+        //         "modifiedDate": String _,
+        //       }) {
+        //     ProductModel tmpRecord =
+        //         ProductModel.fromJson(element as Map<String, dynamic>);
+        //     // NOTE: don't know how to cast List<dynamic> -> List<CustomType>, temp solution
+        //     resourceClt = [...resourceClt, tmpRecord];
+        //     log("dmm: $tmpRecord");
+        //     return tmpRecord;
+        //   }
+        // });
+      }
+      return [];
+    } catch (err) {
+      return [];
+    }
+  }
+
   Future<ProductModel> getOne(String url) async {
     try {
       final response = await http.get(Uri.parse(url));

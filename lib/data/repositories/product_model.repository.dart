@@ -13,6 +13,11 @@ class ProductModelRepository {
     ProductModelProvider? productModelProvider,
   }) : _productModelProvider = productModelProvider ?? ProductModelProvider();
 
+  Future<List<ProductModel>> readAll() async {
+    final List<ProductModel> clt = await _productModelProvider.getAll(_baseUrl);
+    return clt;
+  }
+
   Future<ProductModel> readOne(int recordId) async {
     final ProductModel record =
         await _productModelProvider.getOne("$_baseUrl/$recordId");

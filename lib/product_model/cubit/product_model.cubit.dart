@@ -16,6 +16,25 @@ class ProductModelCubit extends Cubit<ProductModelState> {
 
   final ProductModelRepository _productModelRepository;
 
+  Future<void> fetchAll() async {
+    emit(state.copyWith(resourceStatusHere: ResourceStatus.inProgress));
+
+    final queryRes = await _productModelRepository.readAll();
+
+    if (queryRes case List tmp when tmp.isNotEmpty) {
+      emit(state.copyWith(
+        resourceStatusHere: ResourceStatus.success,
+        productModelListHere: queryRes,
+      ));
+      return;
+    }
+
+    emit(state.copyWith(
+      resourceStatusHere: ResourceStatus.failure,
+      productModelListHere: [],
+    ));
+  }
+
   Future<void> fetchOne({required int recordId}) async {
     emit(state.copyWith(resourceStatusHere: ResourceStatus.inProgress));
 

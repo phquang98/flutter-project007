@@ -38,6 +38,10 @@ class _ResourceScreenState extends State<ResourceScreen> {
           log("filling...");
           log("here from listener: ${state.currentRecord}");
         }
+        if (state.resourceStatus == ResourceStatus.success) {
+          log("have data...");
+          log("here from listener: ${state.productModelList.first}");
+        }
         if (state.resourceStatus == ResourceStatus.failure) {
           log("failed...");
           final snackBar = SnackBar(
@@ -50,7 +54,8 @@ class _ResourceScreenState extends State<ResourceScreen> {
       builder: (context, state) {
         if (state.resourceStatus == ResourceStatus.initial) {
           log("watching...");
-          context.read<ProductModelCubit>().fetchOne(recordId: 10);
+          // context.read<ProductModelCubit>().fetchOne(recordId: 10);
+          context.read<ProductModelCubit>().fetchAll();
         }
 
         return Padding(
