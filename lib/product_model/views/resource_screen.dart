@@ -13,7 +13,12 @@ class ResourceScreen extends StatefulWidget {
 
 class _ResourceScreenState extends State<ResourceScreen> {
   final _formKey = GlobalKey<FormState>();
-  final nameController = TextEditingController();
+
+  final productModelIDCtrl = TextEditingController();
+  final nameCtrl = TextEditingController();
+  final catalogDescriptionCtrl = TextEditingController();
+  final rowGuIDCtrl = TextEditingController();
+  final modifiedDateCtrl = TextEditingController();
 
   @override
   void initState() {
@@ -24,7 +29,10 @@ class _ResourceScreenState extends State<ResourceScreen> {
   @override
   void dispose() {
     super.dispose();
-    nameController.dispose();
+    nameCtrl.dispose();
+    catalogDescriptionCtrl.dispose();
+    rowGuIDCtrl.dispose();
+    modifiedDateCtrl.dispose();
   }
 
   @override
@@ -36,11 +44,23 @@ class _ResourceScreenState extends State<ResourceScreen> {
       listener: (context, state) {
         if (state.resourceStatus == ResourceStatus.inProgress) {
           log("filling...");
-          log("here from listener: ${state.currentRecord}");
+          log("in listener + progress: ${state.currentRecord}");
         }
         if (state.resourceStatus == ResourceStatus.success) {
           log("have data...");
-          log("here from listener: ${state.productModelList.first}");
+          if (state.productModelList.length == 1) {
+            final snackBar = SnackBar(
+              content:
+                  Text("getOne success: ${state.productModelList[0].name}"),
+            );
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          }
+          if (state.productModelList.length > 1) {
+            final snackBar = SnackBar(
+              content: Text("getAll success: ${state.productModelList.length}"),
+            );
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          }
         }
         if (state.resourceStatus == ResourceStatus.failure) {
           log("failed...");
@@ -55,7 +75,7 @@ class _ResourceScreenState extends State<ResourceScreen> {
         if (state.resourceStatus == ResourceStatus.initial) {
           log("watching...");
           // context.read<ProductModelCubit>().fetchOne(recordId: 10);
-          context.read<ProductModelCubit>().fetchAll();
+          // context.read<ProductModelCubit>().fetchAll();
         }
 
         return Padding(
@@ -74,11 +94,31 @@ class _ResourceScreenState extends State<ResourceScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       // wrap this in SizedBox to prevent jumping height if error validating
+                      // ---
                       SizedBox(
                         height: 80,
                         child: TextFormField(
-                          controller: nameController,
-                          // initialValue: "test",
+                          // initialValue must be null when this isn't
+                          // controller: nameCtrl,
+                          decoration: const InputDecoration(
+                            hintText: 'This input will be disabled.',
+                            labelText: 'productModelID',
+                          ),
+                          keyboardType: TextInputType.phone,
+                          // onSaved: (newValue) {},
+                          readOnly: true,
+                        ),
+                      ),
+                      // ---
+                      SizedBox(
+                        height: 80,
+                        child: TextFormField(
+                          // initialValue must be null when this isn't
+                          controller: nameCtrl,
+                          decoration: const InputDecoration(
+                            hintText: 'Name of the product model.',
+                            labelText: 'name',
+                          ),
                           keyboardType: TextInputType.phone,
                           // onSaved: (newValue) {},
                           validator: (value) {
@@ -89,21 +129,86 @@ class _ResourceScreenState extends State<ResourceScreen> {
                           },
                         ),
                       ),
+                      // ---
+                      SizedBox(
+                        height: 80,
+                        child: TextFormField(
+                          // initialValue must be null when this isn't
+                          controller: catalogDescriptionCtrl,
+                          decoration: const InputDecoration(
+                            hintText:
+                                'Catalogue description of the product model.',
+                            labelText: 'catalogDescription',
+                          ),
+                          keyboardType: TextInputType.phone,
+                          // onSaved: (newValue) {},
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter some text';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                      // ---
+                      SizedBox(
+                        height: 80,
+                        child: TextFormField(
+                          // initialValue must be null when this isn't
+                          controller: rowGuIDCtrl,
+                          decoration: const InputDecoration(
+                            hintText: 'Row GUID of the product model.',
+                            labelText: 'rowguid',
+                          ),
+                          keyboardType: TextInputType.phone,
+                          // onSaved: (newValue) {},
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter some text';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                      // ---
+                      SizedBox(
+                        height: 80,
+                        child: TextFormField(
+                          // initialValue must be null when this isn't
+                          controller: modifiedDateCtrl,
+                          decoration: const InputDecoration(
+                            hintText: 'Modified date of the product model.',
+                            labelText: 'modifiedDate',
+                          ),
+                          keyboardType: TextInputType.phone,
+                          // onSaved: (newValue) {},
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter some text';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                      // ---
                       ElevatedButton(
                         onPressed: () {
                           if (_formKey.currentState
                               case FormState formKeyCurrentState?) {
                             if (formKeyCurrentState.validate()) {
-                              final tmpOne = nameController.text;
+                              final tmpOne = nameCtrl.text;
 
-                              context.read<ProductModelCubit>().updateByChange({
-                                "productModelID": 69,
+                              final finalForm = {
                                 "name": tmpOne,
                                 "catalogDescription": null,
                                 "rowguid":
                                     "9155e5b2-f52d-4e33-b660-d85a208c0c4b",
                                 "modifiedDate": "2024-01-01",
-                              }, []);
+                              };
+
+                              context
+                                  .read<ProductModelCubit>()
+                                  .createOne(data: finalForm);
 
                               // formKeyCurrentState
                               //     .save(); // call onSave on all possible TextFieldForm

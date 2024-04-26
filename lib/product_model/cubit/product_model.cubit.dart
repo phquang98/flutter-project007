@@ -47,10 +47,12 @@ class ProductModelCubit extends Cubit<ProductModelState> {
             tmp.productModelID == -1 ||
             tmp.productModelID == -2) {
       log("chay loc loi");
-      emit(state.copyWith(
-        resourceStatusHere: ResourceStatus.failure,
-        productModelListHere: [queryRes],
-      ));
+      emit(
+        state.copyWith(
+          resourceStatusHere: ResourceStatus.failure,
+          productModelListHere: [queryRes],
+        ),
+      );
       return;
     }
 
@@ -62,6 +64,29 @@ class ProductModelCubit extends Cubit<ProductModelState> {
       resourceStatusHere: ResourceStatus.success,
       productModelListHere: cacList,
     ));
+    return;
+  }
+
+  // TODO: combine with returns value
+  Future<void> createOne({required Map<String, dynamic> data}) async {
+    emit(state.copyWith(resourceStatusHere: ResourceStatus.inProgress));
+
+    final queryRes = await _productModelRepository.createOne(data);
+
+    if (queryRes == 0) {
+      emit(
+        state.copyWith(
+          resourceStatusHere: ResourceStatus.success,
+        ),
+      );
+      return;
+    }
+
+    emit(
+      state.copyWith(
+        resourceStatusHere: ResourceStatus.failure,
+      ),
+    );
     return;
   }
 

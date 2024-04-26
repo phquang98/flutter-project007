@@ -23,4 +23,10 @@ class ProductModelRepository {
         await _productModelProvider.getOne("$_baseUrl/$recordId");
     return record;
   }
+
+  // TODO: combine with returns value
+  Future<int> createOne(Map<String, dynamic> data) async {
+    final int record = await _productModelProvider.postOne(_baseUrl, data);
+    return record;
+  }
 }
