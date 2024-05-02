@@ -1,3 +1,4 @@
+import 'package:example_repo_layer/product_model/views/my_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,16 +15,25 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        body: MultiBlocProvider(
-          providers: <BlocProvider<dynamic>>[
-            BlocProvider<ProductModelCubit>(
-              create: (BuildContext context) => ProductModelCubit(),
-            ),
-          ],
-          child: const ResourceScreen(),
-        ),
+      home: MultiBlocProvider(
+        providers: <BlocProvider<dynamic>>[
+          BlocProvider<ProductModelCubit>(
+            create: (BuildContext context) => ProductModelCubit(),
+          ),
+        ],
+        child: const ResourceScreen(),
       ),
+      // TODO: xoa
+      // home: Scaffold(
+      //   body: MultiBlocProvider(
+      //     providers: <BlocProvider<dynamic>>[
+      //       BlocProvider<ProductModelCubit>(
+      //         create: (BuildContext context) => ProductModelCubit(),
+      //       ),
+      //     ],
+      //     child: const ResourceScreen(),
+      //   ),
+      // ),
     );
   }
 }

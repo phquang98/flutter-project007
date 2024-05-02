@@ -18,7 +18,7 @@ class ProductModelRepository {
     return clt;
   }
 
-  Future<ProductModel> readOne(int recordId) async {
+  Future<ProductModel> readOne(String recordId) async {
     final ProductModel record =
         await _productModelProvider.getOne("$_baseUrl/$recordId");
     return record;

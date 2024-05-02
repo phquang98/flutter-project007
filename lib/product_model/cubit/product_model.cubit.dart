@@ -17,66 +17,15 @@ class ProductModelCubit extends Cubit<ProductModelState> {
   final ProductModelRepository _productModelRepository;
 
   Future<void> fetchAll() async {
-    emit(state.copyWith(resourceStatusHere: ResourceStatus.inProgress));
+    emit(state.copyWith(statusHere: Status.inProgress, listHere: []));
 
     final queryRes = await _productModelRepository.readAll();
 
     if (queryRes case List tmp when tmp.isNotEmpty) {
-      emit(state.copyWith(
-        resourceStatusHere: ResourceStatus.success,
-        productModelListHere: queryRes,
-      ));
-      return;
-    }
-
-    emit(state.copyWith(
-      resourceStatusHere: ResourceStatus.failure,
-      productModelListHere: [],
-    ));
-  }
-
-  Future<void> fetchOne({required int recordId}) async {
-    emit(state.copyWith(resourceStatusHere: ResourceStatus.inProgress));
-
-    final queryRes = await _productModelRepository.readOne(recordId);
-    log("dmm: $queryRes");
-
-    // Error handling
-    if (queryRes case ProductModel tmp
-        when tmp.productModelID == 0 ||
-            tmp.productModelID == -1 ||
-            tmp.productModelID == -2) {
-      log("chay loc loi");
       emit(
         state.copyWith(
-          resourceStatusHere: ResourceStatus.failure,
-          productModelListHere: [queryRes],
-        ),
-      );
-      return;
-    }
-
-    // create a copy of the existing list and add the new element
-    List<ProductModel> cacList = List.from(state.productModelList)
-      ..add(queryRes);
-
-    emit(state.copyWith(
-      resourceStatusHere: ResourceStatus.success,
-      productModelListHere: cacList,
-    ));
-    return;
-  }
-
-  // TODO: combine with returns value
-  Future<void> createOne({required Map<String, dynamic> data}) async {
-    emit(state.copyWith(resourceStatusHere: ResourceStatus.inProgress));
-
-    final queryRes = await _productModelRepository.createOne(data);
-
-    if (queryRes == 0) {
-      emit(
-        state.copyWith(
-          resourceStatusHere: ResourceStatus.success,
+          listHere: queryRes,
+          statusHere: Status.success,
         ),
       );
       return;
@@ -84,32 +33,64 @@ class ProductModelCubit extends Cubit<ProductModelState> {
 
     emit(
       state.copyWith(
-        resourceStatusHere: ResourceStatus.failure,
+        listHere: [],
+        statusHere: Status.failure,
+      ),
+    );
+  }
+
+  Future<void> fetchOne({required String recordId}) async {
+    emit(state.copyWith(statusHere: Status.inProgress, listHere: []));
+
+    final queryRes = await _productModelRepository.readOne(recordId);
+
+    // Error handling
+    if (queryRes case ProductModel tmp
+        when tmp.productModelID == 0 ||
+            tmp.productModelID == -1 ||
+            tmp.productModelID == -2) {
+      emit(
+        state.copyWith(
+          listHere: [queryRes],
+          statusHere: Status.failure,
+        ),
+      );
+      return;
+    }
+
+    // create a new copy of the existing list and add the new element
+    List<ProductModel> newList = List.from(state.list)..add(queryRes);
+
+    emit(
+      state.copyWith(
+        listHere: newList,
+        statusHere: Status.success,
       ),
     );
     return;
   }
 
-  /// Reflect changes affected by live editing on the UI (e.g. fill in input forms, ...)
-  void updateByChange(
-    Map<String, dynamic> record,
-    List<ProductModel>? productModelList,
-  ) {
-    emit(state.copyWith(
-      currentRecordHere: record,
-      resourceStatusHere: ResourceStatus.inProgress,
-      productModelListHere: productModelList,
-    ));
-    // log("why: $record");
-    // log("why: ${state.currentRecord}");
-  }
+  // TODO: combine with returns value
+  Future<void> createOne({required Map<String, dynamic> data}) async {
+    emit(state.copyWith(statusHere: Status.inProgress, listHere: []));
 
-  void reset() {
-    emit(state.copyWith(
-      currentRecordHere: {},
-      resourceStatusHere: ResourceStatus.initial,
-      productModelListHere: [],
-    ));
+    final queryRes = await _productModelRepository.createOne(data);
+
+    if (queryRes == 0) {
+      emit(
+        state.copyWith(
+          statusHere: Status.success,
+        ),
+      );
+      return;
+    }
+
+    emit(
+      state.copyWith(
+        statusHere: Status.failure,
+      ),
+    );
+    return;
   }
 
   // name should represent the action connecting between the data layer and the presentation layer
