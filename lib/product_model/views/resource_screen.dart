@@ -195,12 +195,16 @@ class _ResourceScreenState extends State<ResourceScreen> {
                               ),
                               keyboardType: TextInputType.phone,
                               // onSaved: (newValue) {},
-                              // validator: (value) {
-                              //   if (value == null || value.isEmpty) {
-                              //     return 'Please enter some text';
-                              //   }
-                              //   return null;
-                              // },
+                              validator: (value) {
+                                if (kind != WidgetKind.get) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter some text';
+                                  }
+                                  return null;
+                                }
+
+                                return null;
+                              },
                             ),
                           ),
                           // ---
@@ -217,9 +221,13 @@ class _ResourceScreenState extends State<ResourceScreen> {
                               keyboardType: TextInputType.phone,
                               // onSaved: (newValue) {},
                               // validator: (value) {
-                              //   if (value == null || value.isEmpty) {
-                              //     return 'Please enter some text';
+                              //   if (kind != WidgetKind.get) {
+                              //     if (value == null || value.isEmpty) {
+                              //       return 'Please enter some text';
+                              //     }
+                              //     return null;
                               //   }
+
                               //   return null;
                               // },
                             ),
@@ -236,12 +244,16 @@ class _ResourceScreenState extends State<ResourceScreen> {
                               ),
                               keyboardType: TextInputType.phone,
                               // onSaved: (newValue) {},
-                              // validator: (value) {
-                              //   if (value == null || value.isEmpty) {
-                              //     return 'Please enter some text';
-                              //   }
-                              //   return null;
-                              // },
+                              validator: (value) {
+                                if (kind != WidgetKind.get) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter some text';
+                                  }
+                                  return null;
+                                }
+
+                                return null;
+                              },
                             ),
                           ),
                           // ---
@@ -256,12 +268,16 @@ class _ResourceScreenState extends State<ResourceScreen> {
                               ),
                               keyboardType: TextInputType.phone,
                               // onSaved: (newValue) {},
-                              // validator: (value) {
-                              //   if (value == null || value.isEmpty) {
-                              //     return 'Please enter some text';
-                              //   }
-                              //   return null;
-                              // },
+                              validator: (value) {
+                                if (kind != WidgetKind.get) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter some text';
+                                  }
+                                  return null;
+                                }
+
+                                return null;
+                              },
                             ),
                           ),
 
@@ -276,31 +292,61 @@ class _ResourceScreenState extends State<ResourceScreen> {
                                 child: const Text('Get All'),
                               ),
                             ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-                            child: ElevatedButton(
+
+                          // NOTE: don't know how to wrap these 2 into 1
+                          if (kind == WidgetKind.get)
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  if (_formKey.currentState
+                                      case FormState formKeyCurrentState?) {
+                                    if (formKeyCurrentState.validate()) {
+                                      final tmpOne = productModelIDCtrl.text;
+
+                                      context
+                                          .read<ProductModelCubit>()
+                                          .fetchOne(recordId: tmpOne);
+                                    }
+                                  }
+                                },
+                                child: const Text('Get One'),
+                              ),
+                            ),
+
+                          if (kind == WidgetKind.post)
+                            ElevatedButton(
                               onPressed: () {
                                 if (_formKey.currentState
                                     case FormState formKeyCurrentState?) {
                                   if (formKeyCurrentState.validate()) {
-                                    final tmpOne = productModelIDCtrl.text;
+                                    // final tmpOne = productModelIDCtrl.text;
+                                    final tmpTwo = nameCtrl.text;
+                                    // const tmpThree = null;
+                                    final tmpFour = rowGuIDCtrl.text;
+                                    final tmpFive = modifiedDateCtrl.text;
 
                                     context
                                         .read<ProductModelCubit>()
-                                        .fetchOne(recordId: tmpOne);
+                                        .createOne(data: {
+                                      // "productModelID": 13,
+                                      "name": tmpTwo,
+                                      "catalogDescription": null,
+                                      "rowguid": tmpFour,
+                                      "modifiedDate": tmpFive
+                                    });
                                   }
                                 }
                               },
-                              child: const Text('Get One'),
+                              child: const Text('Post One'),
                             ),
-                          ),
 
                           if (kind == WidgetKind.delete)
                             ElevatedButton(
                               onPressed: () {
                                 context.read<ProductModelCubit>().fetchAll();
                               },
-                              child: const Text('DeleteOne'),
+                              child: const Text('Delete One'),
                             ),
 
                           // ElevatedButton(
@@ -330,9 +376,14 @@ class _ResourceScreenState extends State<ResourceScreen> {
                           //   },
                           //   child: const Text('Submit'),
                           // ),
-                          // TODO: only switch expression exist, no if expression
-                          // Loi logic: code nay thuc thi truoc -> khong co data -> error
-                          // Text('Data o day: ${state.productModelList[0].name}'),
+
+                          // TODO: directly returns widget using switch expr or strange if syntax (e.g. `if() Text(...)`)
+
+                          // Basic flow: user click btn -> btn call cubit funcs
+                          // -> funcs emits new state
+                          // this widget subscribe (BlocConsumer) -> will hear the new state
+                          // -> rebuild
+
                           Padding(
                             padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
                             child: switch ((state.status, state.list.length)) {
