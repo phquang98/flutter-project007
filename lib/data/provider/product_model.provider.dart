@@ -141,4 +141,23 @@ class ProductModelProvider {
       return -1;
     }
   }
+
+  Future<int> deleteOne(String url) async {
+    try {
+      final response = await http.delete(
+        Uri.parse(url),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return 0;
+      }
+
+      return -1;
+    } catch (err) {
+      return -1;
+    }
+  }
 }

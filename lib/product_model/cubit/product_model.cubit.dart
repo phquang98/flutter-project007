@@ -115,5 +115,27 @@ class ProductModelCubit extends Cubit<ProductModelState> {
     return;
   }
 
+  Future<void> deleteOne({required String recordId}) async {
+    emit(state.copyWith(statusHere: Status.inProgress, listHere: []));
+
+    final queryRes = await _productModelRepository.deleteOne(recordId);
+
+    if (queryRes == 0) {
+      emit(
+        state.copyWith(
+          statusHere: Status.success,
+        ),
+      );
+      return;
+    }
+
+    emit(
+      state.copyWith(
+        statusHere: Status.failure,
+      ),
+    );
+    return;
+  }
+
   // name should represent the action connecting between the data layer and the presentation layer
 }

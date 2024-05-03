@@ -99,8 +99,8 @@ class _ResourceScreenState extends State<ResourceScreen> {
               title: const Text('Delete'),
               // selected: _selectedDrawer == 3,
               onTap: () {
-                // _onItemTapped(WidgetKind.delete);
-                // Navigator.pop(context);
+                _onItemTapped(WidgetKind.delete);
+                Navigator.pop(context);
               },
             ),
           ],
@@ -171,11 +171,14 @@ class _ResourceScreenState extends State<ResourceScreen> {
                               keyboardType: TextInputType.phone,
                               // onSaved: (newValue) {},
                               readOnly: kind == WidgetKind.get ||
-                                      kind == WidgetKind.put
+                                      kind == WidgetKind.put ||
+                                      kind == WidgetKind.delete
                                   ? false
                                   : true,
                               validator: (value) {
-                                if (kind == WidgetKind.get) {
+                                if (kind == WidgetKind.get ||
+                                    kind == WidgetKind.put ||
+                                    kind == WidgetKind.delete) {
                                   if (value == null || value.isEmpty) {
                                     return 'Please enter some text';
                                   }
@@ -199,7 +202,8 @@ class _ResourceScreenState extends State<ResourceScreen> {
                               keyboardType: TextInputType.phone,
                               // onSaved: (newValue) {},
                               validator: (value) {
-                                if (kind != WidgetKind.get) {
+                                if (kind != WidgetKind.get &&
+                                    kind != WidgetKind.delete) {
                                   if (value == null || value.isEmpty) {
                                     return 'Please enter some text';
                                   }
@@ -248,7 +252,8 @@ class _ResourceScreenState extends State<ResourceScreen> {
                               keyboardType: TextInputType.phone,
                               // onSaved: (newValue) {},
                               validator: (value) {
-                                if (kind != WidgetKind.get) {
+                                if (kind != WidgetKind.get &&
+                                    kind != WidgetKind.delete) {
                                   if (value == null || value.isEmpty) {
                                     return 'Please enter some text';
                                   }
@@ -272,7 +277,8 @@ class _ResourceScreenState extends State<ResourceScreen> {
                               keyboardType: TextInputType.phone,
                               // onSaved: (newValue) {},
                               validator: (value) {
-                                if (kind != WidgetKind.get) {
+                                if (kind != WidgetKind.get &&
+                                    kind != WidgetKind.delete) {
                                   if (value == null || value.isEmpty) {
                                     return 'Please enter some text';
                                   }
@@ -374,7 +380,16 @@ class _ResourceScreenState extends State<ResourceScreen> {
                           if (kind == WidgetKind.delete)
                             ElevatedButton(
                               onPressed: () {
-                                context.read<ProductModelCubit>().fetchAll();
+                                if (_formKey.currentState
+                                    case FormState formKeyCurrentState?) {
+                                  if (formKeyCurrentState.validate()) {
+                                    final tmpOne = productModelIDCtrl.text;
+
+                                    context
+                                        .read<ProductModelCubit>()
+                                        .deleteOne(recordId: tmpOne);
+                                  }
+                                }
                               },
                               child: const Text('Delete One'),
                             ),

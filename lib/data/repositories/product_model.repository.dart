@@ -47,4 +47,10 @@ class ProductModelRepository {
 
     return -1;
   }
+
+  Future<int> deleteOne(String recordId) async {
+    final int result =
+        await _productModelProvider.deleteOne("$_baseUrl/$recordId");
+    return result;
+  }
 }
