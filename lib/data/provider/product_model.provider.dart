@@ -122,23 +122,23 @@ class ProductModelProvider {
     }
   }
 
-  // Future<int> putOne(String url, Map<String, dynamic> data) async {
-  //   try {
-  //     final response = await http.put(
-  //       Uri.parse(url),
-  //       headers: <String, String>{
-  //         'Content-Type': 'application/json; charset=UTF-8',
-  //       },
-  //       body: jsonEncode(data),
-  //     );
+  Future<int> putOne(String url, Map<String, dynamic> data) async {
+    try {
+      final response = await http.put(
+        Uri.parse(url),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(data),
+      );
 
-  //     if (response.statusCode == 200) {
-  //       return 0;
-  //     }
+      if (response.statusCode == 200) {
+        return 0;
+      }
 
-  //     return -1;
-  //   } catch (err) {
-  //     return -1;
-  //   }
-  // }
+      return -1;
+    } catch (err) {
+      return -1;
+    }
+  }
 }

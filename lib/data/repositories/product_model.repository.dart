@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:example_repo_layer/data/provider/index.dart';
 import 'package:example_repo_layer/product_model/models/index.dart';
 
@@ -26,7 +28,23 @@ class ProductModelRepository {
 
   // TODO: combine with returns value
   Future<int> createOne(Map<String, dynamic> data) async {
-    final int record = await _productModelProvider.postOne(_baseUrl, data);
-    return record;
+    final int result = await _productModelProvider.postOne(_baseUrl, data);
+    return result;
+  }
+
+  // TODO: combine with returns value
+  Future<int> updateOne(Map<String, dynamic> data) async {
+    if (data
+        case {
+          "productModelID": String _,
+        }) {
+      final int result = await _productModelProvider.putOne(
+        "$_baseUrl/${data['productModelID']}",
+        data,
+      );
+      return result;
+    }
+
+    return -1;
   }
 }

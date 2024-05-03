@@ -93,5 +93,27 @@ class ProductModelCubit extends Cubit<ProductModelState> {
     return;
   }
 
+  Future<void> updateOne({required Map<String, dynamic> data}) async {
+    emit(state.copyWith(statusHere: Status.inProgress, listHere: []));
+
+    final queryRes = await _productModelRepository.updateOne(data);
+
+    if (queryRes == 0) {
+      emit(
+        state.copyWith(
+          statusHere: Status.success,
+        ),
+      );
+      return;
+    }
+
+    emit(
+      state.copyWith(
+        statusHere: Status.failure,
+      ),
+    );
+    return;
+  }
+
   // name should represent the action connecting between the data layer and the presentation layer
 }

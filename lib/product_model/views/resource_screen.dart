@@ -89,15 +89,15 @@ class _ResourceScreenState extends State<ResourceScreen> {
             ),
             ListTile(
               title: const Text('Put'),
-              // selected: _selectedDrawer == 1,
+              // selected: _selectedDrawer == 2,
               onTap: () {
-                // _onItemTapped(WidgetKind.put);
-                // Navigator.pop(context);
+                _onItemTapped(WidgetKind.put);
+                Navigator.pop(context);
               },
             ),
             ListTile(
               title: const Text('Delete'),
-              // selected: _selectedDrawer == 1,
+              // selected: _selectedDrawer == 3,
               onTap: () {
                 // _onItemTapped(WidgetKind.delete);
                 // Navigator.pop(context);
@@ -170,7 +170,10 @@ class _ResourceScreenState extends State<ResourceScreen> {
                               ),
                               keyboardType: TextInputType.phone,
                               // onSaved: (newValue) {},
-                              readOnly: kind == WidgetKind.get ? false : true,
+                              readOnly: kind == WidgetKind.get ||
+                                      kind == WidgetKind.put
+                                  ? false
+                                  : true,
                               validator: (value) {
                                 if (kind == WidgetKind.get) {
                                   if (value == null || value.isEmpty) {
@@ -326,19 +329,46 @@ class _ResourceScreenState extends State<ResourceScreen> {
                                     final tmpFour = rowGuIDCtrl.text;
                                     final tmpFive = modifiedDateCtrl.text;
 
-                                    context
-                                        .read<ProductModelCubit>()
-                                        .createOne(data: {
-                                      // "productModelID": 13,
-                                      "name": tmpTwo,
-                                      "catalogDescription": null,
-                                      "rowguid": tmpFour,
-                                      "modifiedDate": tmpFive
-                                    });
+                                    context.read<ProductModelCubit>().createOne(
+                                      data: {
+                                        // "productModelID": 13,
+                                        "name": tmpTwo,
+                                        "catalogDescription": null,
+                                        "rowguid": tmpFour,
+                                        "modifiedDate": tmpFive
+                                      },
+                                    );
                                   }
                                 }
                               },
                               child: const Text('Post One'),
+                            ),
+
+                          if (kind == WidgetKind.put)
+                            ElevatedButton(
+                              onPressed: () {
+                                if (_formKey.currentState
+                                    case FormState formKeyCurrentState?) {
+                                  if (formKeyCurrentState.validate()) {
+                                    final tmpOne = productModelIDCtrl.text;
+                                    final tmpTwo = nameCtrl.text;
+                                    // const tmpThree = null;
+                                    final tmpFour = rowGuIDCtrl.text;
+                                    final tmpFive = modifiedDateCtrl.text;
+
+                                    context.read<ProductModelCubit>().updateOne(
+                                      data: {
+                                        "productModelID": tmpOne,
+                                        "name": tmpTwo,
+                                        "catalogDescription": null,
+                                        "rowguid": tmpFour,
+                                        "modifiedDate": tmpFive,
+                                      },
+                                    );
+                                  }
+                                }
+                              },
+                              child: const Text('Update One'),
                             ),
 
                           if (kind == WidgetKind.delete)
