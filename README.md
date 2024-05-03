@@ -1,3 +1,2 @@
-# example_repo_layer
-
-A new Flutter project.
+# Flutter Project 007
+An example on how to write Flutter code using BloC patterns.
