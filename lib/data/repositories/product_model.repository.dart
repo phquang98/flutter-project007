@@ -26,13 +26,11 @@ class ProductModelRepository {
     return record;
   }
 
-  // TODO: combine with returns value
   Future<int> createOne(Map<String, dynamic> data) async {
     final int result = await _productModelProvider.postOne(_baseUrl, data);
     return result;
   }
 
-  // TODO: combine with returns value
   Future<int> updateOne(Map<String, dynamic> data) async {
     if (data
         case {
@@ -52,5 +50,39 @@ class ProductModelRepository {
     final int result =
         await _productModelProvider.deleteOne("$_baseUrl/$recordId");
     return result;
+  }
+
+  // NOTE: example of a compound repo func: combine multiple actions + add logic to compute desired result
+  Future<ProductModel> updateAndReadOne(Map<String, dynamic> data) async {
+    try {
+      if (data
+          case {
+            "productModelID": String _,
+          }) {
+        final result01 = await _productModelProvider.putOne(
+          "$_baseUrl/${data['productModelID']}",
+          data,
+        );
+        final result02 = await _productModelProvider
+            .getOne("$_baseUrl/${data["productModelID"]}");
+        return result02;
+      }
+
+      final failedResult = {
+        "productModelID": -3,
+        "name": "Something wrong in compound repo func",
+        "rowguid": "",
+        "modifiedDate": "",
+      };
+      return ProductModel.fromJson(failedResult);
+    } catch (e) {
+      final failedResult = {
+        "productModelID": -4,
+        "name": "Error in compound repo func",
+        "rowguid": "",
+        "modifiedDate": "",
+      };
+      return ProductModel.fromJson(failedResult);
+    }
   }
 }

@@ -63,14 +63,13 @@ class ProductModelCubit extends Cubit<ProductModelState> {
 
     emit(
       state.copyWith(
-        listHere: newList,
+        listHere: newList, // or just [queryRes]
         statusHere: Status.success,
       ),
     );
     return;
   }
 
-  // TODO: combine with returns value
   Future<void> createOne({required Map<String, dynamic> data}) async {
     emit(state.copyWith(statusHere: Status.inProgress, listHere: []));
 
@@ -137,5 +136,27 @@ class ProductModelCubit extends Cubit<ProductModelState> {
     return;
   }
 
-  // name should represent the action connecting between the data layer and the presentation layer
+  // NOTE: example of a compound cubit func: combine multiple actions + add logic to compute desired result
+  Future<void> fastUpdate({required Map<String, dynamic> data}) async {
+    emit(state.copyWith(statusHere: Status.inProgress, listHere: []));
+
+    final queryRes = await _productModelRepository.updateAndReadOne(data);
+
+    if (queryRes.productModelID case int tmp? when tmp > 0) {
+      emit(
+        state.copyWith(
+          listHere: [queryRes],
+          statusHere: Status.success,
+        ),
+      );
+      return;
+    }
+
+    emit(
+      state.copyWith(
+        statusHere: Status.failure,
+      ),
+    );
+    return;
+  }
 }

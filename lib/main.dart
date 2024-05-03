@@ -23,17 +23,6 @@ class MainApp extends StatelessWidget {
         ],
         child: const ResourceScreen(),
       ),
-      // TODO: xoa
-      // home: Scaffold(
-      //   body: MultiBlocProvider(
-      //     providers: <BlocProvider<dynamic>>[
-      //       BlocProvider<ProductModelCubit>(
-      //         create: (BuildContext context) => ProductModelCubit(),
-      //       ),
-      //     ],
-      //     child: const ResourceScreen(),
-      //   ),
-      // ),
     );
   }
 }

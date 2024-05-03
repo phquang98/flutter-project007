@@ -60,9 +60,6 @@ class _ResourceScreenState extends State<ResourceScreen> {
       drawer: Drawer(
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(0)),
-          // borderRadius: BorderRadius.only(
-          //       topRight: Radius.circular(20),
-          //       bottomRight: Radius.circular(20)),
         ),
         child: ListView(
           padding: const EdgeInsets.all(0),
@@ -103,6 +100,14 @@ class _ResourceScreenState extends State<ResourceScreen> {
                 Navigator.pop(context);
               },
             ),
+            ListTile(
+              title: const Text('Compound Action'),
+              // selected: _selectedDrawer == 3,
+              onTap: () {
+                _onItemTapped(WidgetKind.put);
+                Navigator.pop(context);
+              },
+            ),
           ],
         ),
       ),
@@ -137,8 +142,6 @@ class _ResourceScreenState extends State<ResourceScreen> {
           builder: (context, state) {
             if (state.status == Status.initial) {
               log("watching...");
-              // context.read<ProductModelCubit>().fetchOne(recordId: 10);
-              // context.read<ProductModelCubit>().fetchAll();
             }
 
             return Padding(
@@ -149,7 +152,6 @@ class _ResourceScreenState extends State<ResourceScreen> {
                   child: SizedBox(
                     width: screenWidth * 0.4,
                     height: 600,
-                    // child: const Text('Testing...')
                     child: Form(
                       key: _formKey,
                       child: Column(
@@ -375,6 +377,38 @@ class _ResourceScreenState extends State<ResourceScreen> {
                                 }
                               },
                               child: const Text('Update One'),
+                            ),
+
+                          if (kind == WidgetKind.put)
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  if (_formKey.currentState
+                                      case FormState formKeyCurrentState?) {
+                                    if (formKeyCurrentState.validate()) {
+                                      final tmpOne = productModelIDCtrl.text;
+                                      final tmpTwo = nameCtrl.text;
+                                      // const tmpThree = null;
+                                      final tmpFour = rowGuIDCtrl.text;
+                                      final tmpFive = modifiedDateCtrl.text;
+
+                                      context
+                                          .read<ProductModelCubit>()
+                                          .fastUpdate(
+                                        data: {
+                                          "productModelID": tmpOne,
+                                          "name": tmpTwo,
+                                          "catalogDescription": null,
+                                          "rowguid": tmpFour,
+                                          "modifiedDate": tmpFive,
+                                        },
+                                      );
+                                    }
+                                  }
+                                },
+                                child: const Text('Fast update'),
+                              ),
                             ),
 
                           if (kind == WidgetKind.delete)
